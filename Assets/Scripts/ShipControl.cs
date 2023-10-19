@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class ShipControl : MonoBehaviour
 {
-    // A variable to store the speed of the ship
+    // A variable to store the speed of the ship,
     public float speed = 5f;
-
+    [SerializeField]
+    private GameObject bullet;
     // Update method to get the input from the user
+
+    private void Start()
+    {
+       ObjectPoolManager.Instance.CreatePool("Bullet", bullet, 5);
+    }
     private void Update()
     {
         // Get the horizontal and vertical input from the user
@@ -22,6 +28,11 @@ public class ShipControl : MonoBehaviour
 
         // Call the Move method and pass the direction vector as a parameter
         Move(direction);
+
+        if (Input.GetButtonDown("Fire1") ||Input.GetMouseButtonDown(0))
+        {
+            Fire();
+        }
     }
 
     // Move method to move the ship according to the direction vector
@@ -45,5 +56,13 @@ public class ShipControl : MonoBehaviour
         {
             screenPosition.x = Screen.width;
         }
+    }
+
+    private void Fire()
+    {
+        //Fire bullet in pools
+        GameObject bulletIns = ObjectPoolManager.Instance.GetObject("Bullet", bullet);
+        bulletIns.transform.position = transform.position;
+        bulletIns.SetActive(true);
     }
 }

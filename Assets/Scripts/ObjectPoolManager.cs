@@ -53,7 +53,7 @@ public class ObjectPoolManager : MonoBehaviour
     }
 
     // A method to get an object from a pool by its type
-    public GameObject GetObject(string objectType)
+    public GameObject GetObject(string objectType, GameObject prefab)
     {
         // Check if the pool exists
         if (!pools.ContainsKey(objectType))
@@ -65,11 +65,12 @@ public class ObjectPoolManager : MonoBehaviour
         // Get the queue of the pool
         Queue<GameObject> queue = pools[objectType];
 
-        // Check if the queue is empty
+        // Check if the queue is empty added new object
         if (queue.Count == 0)
         {
-            Debug.LogError("The pool for " + objectType + " is empty.");
-            return null;
+            GameObject objAgain = Instantiate(prefab);
+            objAgain.SetActive(false);
+            queue.Enqueue(objAgain);
         }
 
         // Dequeue an object from the queue and return it
